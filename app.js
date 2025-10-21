@@ -3,3 +3,4 @@ const app=express()
 app.get('/',(req,res)=>{
     res.send("Welcome to HelthPal")
 })
+module.exports=app
