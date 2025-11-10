@@ -27,7 +27,10 @@ const sql = `
     return rows[0]||null
 
 }
-
+static async showAllRequests(){
+  const sql=`SELECT * FROM requests`;
+  const [rows]=await db.query(sql)
+    return rows}
 
 }
 module.exports=Request

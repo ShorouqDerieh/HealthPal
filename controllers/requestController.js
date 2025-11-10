@@ -1,4 +1,4 @@
-const model=require('../models/request')
+const model=require('../models/requestModel')
 exports.createRequest=async (req,res)=>
 {
   try{
@@ -39,3 +39,13 @@ exports.viewRequest=async (req,res)=>
     res.status(500).json({ error: err.message });
   }
 };
+exports.viewAllRequests=async(req,res)=>{
+  try{
+    const request= await model.showAllRequests()
+    if (!request) return res.status(404).json({ message: 'Request not found' });
+    res.status(200).json(request);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: err.message });
+  }
+  }
