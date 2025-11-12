@@ -9,6 +9,7 @@ const cors = require('cors');
 const helmet = require('helmet');
 const rateLimit = require('express-rate-limit');
 require('dotenv').config();
+console.log("JWT_SECRET =", process.env.JWT_SECRET);
 const authRoutes = require('./routes/Feature 1.1/authRoutes');
 const appointmentsRoutes = require('./routes/Feature 1.1/appointmentsRoutes');
 const checker=require('./jobs/expiryCheck')
