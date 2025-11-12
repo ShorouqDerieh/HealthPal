@@ -2,9 +2,13 @@ const model=require('../models/requestModel')
 exports.createRequest=async (req,res)=>
 {
   try{
+     if (!req.user || !req.user.id) {
+      return res.status(401).json({ message: "Missing or invalid token" });
+    }
+
     const request={
      //   id:req.body.id,
-    requester_user_id: req.body.requester_user_id,
+    requester_user_id: req.user.id,
     type: req.body.type,
     name: req.body.name,
     dosage_or_specs: req.body.dosage_or_specs,
