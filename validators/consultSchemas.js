@@ -42,6 +42,14 @@ const typingStatusSchema = {
   is_typing: { type: "boolean" },
 };
 
+const translatedMessagesQuerySchema = {
+  target_lang: {
+    type: "enum",
+    values: ["ar", "en"],
+    optional: true,
+  },
+};
+
 module.exports = {
   startSessionAudioSchema,
   startSessionAsyncSchema,
@@ -52,4 +60,5 @@ module.exports = {
   streamMessagesQuerySchema,
   fileUploadSchema,
   typingStatusSchema,
+  translatedMessagesQuerySchema,
 };

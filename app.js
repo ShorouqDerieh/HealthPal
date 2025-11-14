@@ -27,3 +27,6 @@ const appointmentsRoutes = require('./routes/Feature 1.1/appointmentsRoutes');
 app.use('/appointments', appointmentsRoutes);
 const consultRoutes = require('./routes/Feature 1.2/consultRoutes');
 app.use('/consult', consultRoutes);
+
+const translationRoutes = require("./routes/Feature 1.3/translationRoutes");
+app.use("/translation", translationRoutes);
