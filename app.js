@@ -25,3 +25,5 @@ app.use('/doctors',doctorRoutes);
 module.exports = app;
 const appointmentsRoutes = require('./routes/Feature 1.1/appointmentsRoutes');
 app.use('/appointments', appointmentsRoutes);
+const consultRoutes = require('./routes/Feature 1.2/consultRoutes');
+app.use('/consult', consultRoutes);
