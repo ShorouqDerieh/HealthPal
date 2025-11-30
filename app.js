@@ -3,10 +3,11 @@ const cors = require('cors');
 const helmet = require('helmet');
 const rateLimit = require('express-rate-limit');
 require('dotenv').config();
-
+const swaggerUi = require("swagger-ui-express");
+const YAML = require("yamljs");
 const app = express();
 
-
+const openapiDocument = YAML.load("./openapi.yaml");
 app.use(express.json());
 
 app.use(cors());
@@ -30,3 +31,13 @@ app.use('/consult', consultRoutes);
 
 const translationRoutes = require("./routes/Feature 1.3/translationRoutes");
 app.use("/translation", translationRoutes);
+const sponsorshipRoutes = require("./routes/Feature 2.1/sponsorshipRoutes");
+app.use("/sponsorship", sponsorshipRoutes);
+app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(openapiDocument));
+
+//const PORT = process.env.PORT || 3000;
+
+/*app.listen(PORT, () => {
+  console.log(`Server running on http://localhost:${PORT}`);
+  console.log(`Swagger docs on http://localhost:${PORT}/api-docs`);
+});*/
