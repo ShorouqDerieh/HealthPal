@@ -8,9 +8,6 @@ const router=express.Router()
 router.post('/',auth.authRequired,controller.createRequest)
 router.get('/:id',controller.viewRequest)
 router.get("/",controller.viewAllRequests)
-
-
-
-
-
+router.get('/my/requests',auth.authRequired,controller.viewMyRequests);
+router.patch('/:id/status',auth.authRequired,auth.requireRole("admin","ngo_staff"),controller.UpdateStatus)
 module.exports=router

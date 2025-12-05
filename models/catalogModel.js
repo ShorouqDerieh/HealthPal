@@ -1,7 +1,7 @@
 const db=require('../database')
 class Catalog{
     //all items and search by filter or without
-    static async ViewItems({ kind = null,search='',condition=null,sort='name',order='asc'} = {}){
+    static async viewItems({ kind = null,search='',condition=null,sort='name',order='asc'} = {}){
          let sql=`SELECT listings.id as listing_id,
          listings.lister_type,
          listings.status,
@@ -48,7 +48,7 @@ catch(err){
 }
 }
 
-static async ViewOneItem(id){
+static async viewOneItem(id){
     let sql = `
   SELECT
     listings.id                     AS listing_id,
@@ -91,8 +91,17 @@ catch(err){
 }
 
 
-static async AddItem(){
-    let sql=`INSERT INTO `
+static async addItem(item){
+    let sql=`INSERT INTO listings(inventory_item_id,lister_type,status,created_at,lister_user_id)
+    VALUES(?,?,?,?,?)`
+    const params=[item.inventory_item_id,item.lister_type,item.status,item.created_at,item.lister_user_id];
+    const [result] = await db.query(sql, params);
+    return result.insertId
+}
+static async editStatus(id,status){
+    const sql= `UPDATE listings SET status = ? WHERE id = ?`;
+    const [result] = await db.query(sql, [status, id]);
+    return result.affectedRows > 0;
 }
 }
 module.exports=Catalog

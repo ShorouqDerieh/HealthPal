@@ -1,6 +1,5 @@
 const db=require('../database')
 class Request{
-
     static async addRequest(request)
 {
 const sql = `
@@ -30,7 +29,43 @@ const sql = `
 static async showAllRequests(){
   const sql=`SELECT * FROM requests`;
   const [rows]=await db.query(sql)
-    return rows}
+    return rows
+  }
 
+  static async showMyRequests(id){
+    const sql = `
+    SELECT * FROM requests WHERE requester_user_id = ? ORDER BY created_at DESC
+  `;
+  const [rows]=await db.query(sql,[id])
+  return rows;
 }
+static async editRequestStatus(requestId,oldStatus,newStatus,userId,note){
+  const connection = await db.getConnection();
+  try{
+    await connection.beginTransaction();
+    const sql1= `INSERT INTO request_status_history
+          (request_id, old_status, new_status, changed_by_user_id, changed_at, note)
+        VALUES (?, ?, ?, ?, NOW(), ?)
+      `;
+      await connection.query(sql1,[requestId,oldStatus,newStatus,userId,note]);
+   const   sql2=`UPDATE requests SET status=? WHERE id=?`
+  const[results]=await connection.query(sql2,[newStatus,requestId]);
+  if(results.affectedRows==0)
+  {
+    throw new Error("Failed to update request status!")
+  }
+  await connection.commit();
+    return true;
+}
+catch(err)
+{
+  await connection.rollback();
+  throw err;
+}
+finally{
+ connection.release();
+}
+}
+}
+
 module.exports=Request

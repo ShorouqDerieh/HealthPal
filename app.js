@@ -5,6 +5,7 @@ app.use(bodyParser.json())
 const request=require('./routes/requestRoutes')
 const listing=require('./routes/catalogRoutes')
 const doctorRoutes=require('./routes/Feature 1.1/doctorsRoutes');
+const matches=require('./routes/matchRoute')
 const cors = require('cors');
 const helmet = require('helmet');
 const rateLimit = require('express-rate-limit');
@@ -15,6 +16,7 @@ const appointmentsRoutes = require('./routes/Feature 1.1/appointmentsRoutes');
 const checker=require('./jobs/expiryCheck')
 app.use('/requests',request)
 app.use('/catalog',listing)
+app.use('/matches',matches)
 app.use(express.json());
 app.use(cors());
 app.use(helmet());
