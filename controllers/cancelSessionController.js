@@ -10,7 +10,7 @@ module.exports = {
             const rows = await CancelModel.findSessionById(sessionId);
 
             if (rows.length === 0)
-                return res.status(404).json({ error: "Session not found" });
+                return res.status(404).json({ error: "Session not found!" });
 
             if (rows[0].status === "CANCELLED")
                 return res.status(400).json({ error: "Session already cancelled" });
