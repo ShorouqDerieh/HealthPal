@@ -18,4 +18,4 @@ async function getSessionsByDoctor(doctorId){
 }
 module.exports = {
     getSessionsByDoctor
-}
+};

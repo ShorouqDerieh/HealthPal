@@ -1,8 +1,8 @@
 
 const db = require('../database');
 
-module.exports = {
-    async createSession(data) {
+//module.exports = {
+    async function createSession(data) {
         const sql = `
             INSERT INTO counseling_sessions
             (counselor_user_id, patient_user_id, starts_at, ends_at, status, notes_encrypted)
@@ -20,5 +20,6 @@ module.exports = {
 
         return result;
     }
+    module.exports = {
+   createSession
 };
-//add sesss
