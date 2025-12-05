@@ -1,38 +1,54 @@
 
-const Counseling = require('../models/counselingModel');
+const CounselingModel = require('../models/counselingModel.js');
+const UserModel = require('../models/users.js');
+const DoctorModel = require('../models/doctor.js');
+const PatientModel = require('../models/patient.js');
+const { encrypt } = require('../utils/encryption');
 
-exports.getAllSessions = (req, res) => {
-  Counseling.getAll((err, rows) => {
-    if (err) return res.status(500).json({ error: err.message });
-    res.json(rows);
-  });
-};
+module.exports = {
 
-exports.getSessionById = (req, res) => {
-  Counseling.getById(req.params.id, (err, row) => {
-    if (err) return res.status(500).json({ error: err.message });
-    if (!row.length) return res.status(404).json({ message: 'Session not found' });
-    res.json(row[0]);
-  });
-};
+    async create(req, res) {
+        try {
+            const { counselor_id, patient_id, starts_at, ends_at, notes } = req.body;
 
-exports.createSession = (req, res) => {
-  Counseling.create(req.body, (err, result) => {
-    if (err) return res.status(500).json({ error: err.message });
-    res.status(201).json({ message: 'Session created', id: result.insertId });
-  });
-};
+            //Basic validation 
+            if (!counselor_id || !patient_id || !starts_at || !ends_at) {
+                return res.status(400).json({ error: "Missing required fields" });
+            }
+            // check if users exist
+            if (!await UserModel.exists(counselor_id))
+                return res.status(404).json({ error: "Counselor user doesn't exist" });
 
-exports.updateSession = (req, res) => {
-  Counseling.update(req.params.id, req.body, (err) => {
-    if (err) return res.status(500).json({ error: err.message });
-    res.json({ message: 'Session updated successfully' });
-  });
-};
+            if (!await UserModel.exists(patient_id))
+                return res.status(404).json({ error: "Patient user doesn't exist" });
 
-exports.deleteSession = (req, res) => {
-  Counseling.delete(req.params.id, (err) => {
-    if (err) return res.status(500).json({ error: err.message });
-    res.json({ message: 'Session deleted' });
-  });
+       // check roles
+            if (!await DoctorModel.isDoctor(counselor_id))
+                return res.status(400).json({ error: "Counselor must be a doctor" });
+
+            if (!await PatientModel.isPatient(patient_id))
+                return res.status(400).json({ error: "Patient must have a patient profile" });
+
+            //encrypt notes 
+            const encryptedNotes = notes ? encrypt(notes) : null;
+
+            // insert session
+            const result = await CounselingModel.createSession({
+                counselor_id,
+                patient_id,
+                starts_at,
+                ends_at,
+                notes: encryptedNotes
+            });
+
+            return res.status(201).json({
+                message: "Counseling session created",
+                session_id: result.insertId
+            });
+
+        } catch (err) {
+            return res.status(500).json({ error: err.message });
+        }
+    }
+
 };
