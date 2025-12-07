@@ -33,6 +33,8 @@ const translationRoutes = require("./routes/Feature 1.3/translationRoutes");
 app.use("/translation", translationRoutes);
 const sponsorshipRoutes = require("./routes/Feature 2.1/sponsorshipRoutes");
 app.use("/sponsorship", sponsorshipRoutes);
+const patientProfileRoutes = require("./routes/Feature 2.2/patientProfileRoutes");
+app.use("/patient-profiles", patientProfileRoutes);
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(openapiDocument));
 
 //const PORT = process.env.PORT || 3000;
