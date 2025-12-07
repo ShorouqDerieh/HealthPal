@@ -23,6 +23,7 @@ const sql = `
       SELECT * FROM requests WHERE id=?
     `;
     const [rows]=await db.query(sql,[id])
+     console.log('Request from DataBase in showRequest:', rows[0]);
     return rows[0]||null
 
 }
