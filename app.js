@@ -13,6 +13,12 @@ const deleteSupportGroupRoutes = require('./routes/deleteSupportGroupRoutes.js')
 const supportGroupMembersRoutes = require('./routes/supportGroupMembersRoutes.js');
 const joinRequestRoutes = require('./routes/joinRequestRoutes.js');
 const messagesRoutes = require('./routes/supportGroupMessagesRoutes.js');
+const anonChatRoutes = require('./routes/anonChatRoutes.js');
+const anonChatMessagesRoutes = require('./routes/anonChatMessagesRoutes.js');
+const getAnonChatMessagesRoutes = require('./routes/getAnonChatMessagesRoutes.js');
+app.use('/api/anon-chat/messages', getAnonChatMessagesRoutes);
+app.use('/api/anon-chat/messages', anonChatMessagesRoutes);
+app.use('/api/anon-chat', anonChatRoutes);
 app.use('/api/support-groups/messages', messagesRoutes);
 app.use('/api/support-groups/members', supportGroupMembersRoutes);
 app.use('/api/support-groups/delete', deleteSupportGroupRoutes);
