@@ -8,8 +8,10 @@ const doctorRoutes=require('./routes/Feature 1.1/doctorsRoutes');
 const matches=require('./routes/matchRoute')
 const deliveries=require('./routes/deliveryRoutes')
 const fileRoutes = require('./routes/fileRoutes');
+const healthGuideRoutes = require('./routes/healthGuideRoutes');
 app.use('/files', fileRoutes);
 app.use('/upload', express.static('upload'));
+app.use('/health-guides', healthGuideRoutes);
 const cors = require('cors');
 const helmet = require('helmet');
 const rateLimit = require('express-rate-limit');
