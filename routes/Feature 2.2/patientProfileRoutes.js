@@ -1,0 +1,20 @@
+const express=require("express");
+const router =express.Router();
+const {authRequired,requireRole,allowPatientOrRole}=require("../../middleware/auth");
+const patientProfileCtrl = require("../../controllers/Feature 2.2/patientProfileController");
+const {validate}=require("../../utils/fv");
+const {createOrUpdateProfileSchema,addHistoryRecordSchema,createDonationGoalSchema,updateDonationGoalSchema,createRecoveryUpdateSchema}=require("../../validators/patientProfileSchemas");
+router.get("/me",authRequired,patientProfileCtrl.getMyProfile);
+router.post("/me",authRequired,validate({schema:createOrUpdateProfileSchema,source:"body"}),patientProfileCtrl.upsertMyProfile)
+router.get("/public",patientProfileCtrl.listPublicProfiles);
+router.get("/public/:patientUserId",patientProfileCtrl.getPublicProfiles);
+router.patch("/:patientUserId/verify",authRequired,requireRole("doctor"),patientProfileCtrl.verifyProfile);
+router.post("/:patientUserId/history",authRequired,requireRole("doctor","admin"),validate({schema:addHistoryRecordSchema,source:"body"}),patientProfileCtrl.addHistoryRecord);
+router.get("/:patientUserId/history",authRequired,allowPatientOrRole("doctor","admin"),patientProfileCtrl.getFullHistory);
+router.get("/:patientUserId/history/public",patientProfileCtrl.getPublicHistory);
+router.post("/:patientUserId/goals",authRequired,allowPatientOrRole("doctor","admin"),validate({schema:createDonationGoalSchema,source:"body"}),patientProfileCtrl.createDonationGoal);
+router.patch("/:patientUserId/goals/:goalId",authRequired,allowPatientOrRole("doctor","admin"),validate({schema:updateDonationGoalSchema,source:"body"}),patientProfileCtrl.updateDonationGoal);
+router.get("/:patientUserId/goals",authRequired,patientProfileCtrl.getDonationGoals);
+router.post("/:patientUserId/updates",authRequired,allowPatientOrRole("doctor","admin"),validate({schema:createRecoveryUpdateSchema,source:"body"}),patientProfileCtrl.createRecoveryUpdate);
+router.get("/:patientUserId/updates",authRequired,patientProfileCtrl.getRecoveryUpdates);
+module.exports=router;

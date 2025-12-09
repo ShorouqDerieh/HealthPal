@@ -16,6 +16,11 @@ const cors = require('cors');
 const helmet = require('helmet');
 const rateLimit = require('express-rate-limit');
 require('dotenv').config();
+const swaggerUi = require("swagger-ui-express");
+const YAML = require("yamljs");
+const app = express();
+
+const openapiDocument = YAML.load("./openapi.yaml");
 console.log("JWT_SECRET =", process.env.JWT_SECRET);
 const authRoutes = require('./routes/Feature 1.1/authRoutes');
 const appointmentsRoutes = require('./routes/Feature 1.1/appointmentsRoutes');
@@ -32,4 +37,21 @@ app.get('/', (req, res) => res.send('Welcome to HealthPal API'));
 app.use('/auth', authRoutes);
 app.use('/doctors',doctorRoutes);
 app.use('/appointments', appointmentsRoutes);
+const consultRoutes = require('./routes/Feature 1.2/consultRoutes');
+app.use('/consult', consultRoutes);
+
+const translationRoutes = require("./routes/Feature 1.3/translationRoutes");
+app.use("/translation", translationRoutes);
+const sponsorshipRoutes = require("./routes/Feature 2.1/sponsorshipRoutes");
+app.use("/sponsorship", sponsorshipRoutes);
+const patientProfileRoutes = require("./routes/Feature 2.2/patientProfileRoutes");
+app.use("/patient-profiles", patientProfileRoutes);
+app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(openapiDocument));
+
+//const PORT = process.env.PORT || 3000;
+
+/*app.listen(PORT, () => {
+  console.log(`Server running on http://localhost:${PORT}`);
+  console.log(`Swagger docs on http://localhost:${PORT}/api-docs`);
+});*/
 module.exports = app;
