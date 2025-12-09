@@ -1,5 +1,5 @@
 const { query } = require('../database');
-const model=require('../models/catalogModel')
+const model=require('../repositories/catalogRepository')
 exports.viewAllListings=async (req,res)=>
 {
     try{

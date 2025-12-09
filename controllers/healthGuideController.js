@@ -1,4 +1,4 @@
-const HealthGuide=require('../models/healthGuideModel')
+const HealthGuide=require('../repositories/healthGuideRepository')
 exports.getAllGuides=async(req,res)=>{
 try{
     const category=req.query.category

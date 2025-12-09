@@ -1,6 +1,6 @@
-const catalog = require('../models/catalogModel');
-const match = require('../models/matchModel');
-const requestModel = require('../models/requestModel');
+const catalog = require('../repositories/catalogRepository');
+const match = require('../repositories/matchRepository');
+const requestModel = require('../repositories/requestRepository');
 
 exports.createMatch = async (req, res) => {
   try {

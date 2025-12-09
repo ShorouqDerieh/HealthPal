@@ -1,4 +1,4 @@
-const model=require('../models/fileModel')
+const model=require('../repositories/fileRepository')
 exports.upload=async(req,res)=>{
     try{
          if (!req.file) {

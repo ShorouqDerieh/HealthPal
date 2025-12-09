@@ -1,4 +1,4 @@
-const model=require('../models/requestModel')
+const model=require('../repositories/requestRepository')
 exports.createRequest=async (req,res)=>
 {
   try{

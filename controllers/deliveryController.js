@@ -1,8 +1,8 @@
-const model=require('../models/deliveryModel')
-const matchModel=require('../models/matchModel')
-const requestModel=require('../models/requestModel')
-const FileModel=require('../models/fileModel')
-const catalogModel=require('../models/catalogModel')
+const model=require('../repositories/deliveryRepository')
+const matchModel=require('../repositories/matchRepository')
+const requestModel=require('../repositories/requestRepository')
+const FileModel=require('../repositories/fileRepository')
+const catalogModel=require('../repositories/catalogRepository')
 exports.scheduleDelivery=async(req,res)=>{
     try{
     const matchId=req.body.match_id
