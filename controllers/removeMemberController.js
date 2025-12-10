@@ -1,4 +1,4 @@
-const MembersModel = require('../models/removeMemberModel.js');
+const MembersModel = require('../repositories/removeMemberModel.js');
 async function remove(req, res) {
     try {
         const { group_id, user_id } = req.body;

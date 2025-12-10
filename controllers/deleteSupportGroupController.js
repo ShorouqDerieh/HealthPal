@@ -1,4 +1,4 @@
-const GroupsModel = require('../models/deleteSupportGroupModel.js');
+const GroupsModel = require('../repositories/deleteSupportGroupModel.js');
 
 async function remove(req, res) {
     try {

@@ -1,5 +1,5 @@
 
-const CancelModel = require('../models/cancelSessionModel');
+const CancelModel = require('../repositories/cancelSessionModel');
 
 module.exports = {
 

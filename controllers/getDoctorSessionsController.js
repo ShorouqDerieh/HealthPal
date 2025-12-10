@@ -1,6 +1,6 @@
-const DoctorSessionsModel = require('../models/getDoctorSessionsModel.js');
-const UserModel = require('../models/users.js');
-const DoctorModel = require('../models/doctor.js');
+const DoctorSessionsModel = require('../repositories/getDoctorSessionsModel.js');
+const UserModel = require('../repositories/users.js');
+const DoctorModel = require('../repositories/doctor.js');
 
 module.exports = {
     async getByDoctor(req, res) {

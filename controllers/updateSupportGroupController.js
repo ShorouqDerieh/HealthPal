@@ -1,4 +1,4 @@
-const GroupsModel = require('../models/updateSupportGroupModel.js');
+const GroupsModel = require('../repositories/updateSupportGroupModel.js');
 async function update(req, res) {
     try {
         const groupId = req.params.id;

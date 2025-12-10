@@ -1,5 +1,5 @@
-const MembersModel = require('../models/supportGroupMembersModel.js');
-const UserModel = require('../models/users.js');
+const MembersModel = require('../repositories/supportGroupMembersModel.js');
+const UserModel = require('../repositories/users.js');
 
 async function add(req, res) {
     try {

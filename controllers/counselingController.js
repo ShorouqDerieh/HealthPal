@@ -1,8 +1,8 @@
 
-const CounselingModel = require('../models/counselingModel.js');
-const UserModel = require('../models/users.js');
-const DoctorModel = require('../models/doctor.js');
-const PatientModel = require('../models/patient.js');
+const CounselingModel = require('../repositories/counselingModel.js');
+const UserModel = require('../repositories/users.js');
+const DoctorModel = require('../repositories/doctor.js');
+const PatientModel = require('../repositories/patient.js');
 const { encrypt } = require('../utils/encryption');
 
 module.exports = {
@@ -11,7 +11,7 @@ module.exports = {
         try {
             const { counselor_id, patient_id, starts_at, ends_at, notes } = req.body;
 
-            //Basic validation 
+            //basic validation 
             if (!counselor_id || !patient_id || !starts_at || !ends_at) {
                 return res.status(400).json({ error: "Missing required fields" });
             }

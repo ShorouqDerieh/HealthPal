@@ -1,6 +1,6 @@
-const ChatModel = require('../models/anonChatModel.js');
-const UserModel = require('../models/users.js');
-const DoctorModel = require('../models/doctor.js');
+const ChatModel = require('../repositories/anonChatModel.js');
+const UserModel = require('../repositories/users.js');
+const DoctorModel = require('../repositories/doctor.js');
 
 function generatePseudonym() {
     return "anon_" + Math.floor(100000 + Math.random() * 900000);
