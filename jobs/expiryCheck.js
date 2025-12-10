@@ -14,3 +14,4 @@ cron.schedule('1 0 * * *', async () => {
 }, {
   timezone: 'Asia/Hebron'
 });
+
