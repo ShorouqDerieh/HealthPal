@@ -32,6 +32,18 @@ FROM users u, specialties s
 WHERE u.email='Zinab@gmail.com' AND s.name='Mental Health'
 ;
 
+CREATE TABLE user_alerts (
+  id BIGINT AUTO_INCREMENT PRIMARY KEY,
+  user_id BIGINT NOT NULL,
+  alert_id BIGINT NOT NULL,
+  is_read BOOLEAN NOT NULL DEFAULT FALSE,
+  read_at DATETIME NULL,
+
+  FOREIGN KEY (user_id) REFERENCES users(id),
+  FOREIGN KEY (alert_id) REFERENCES alerts(id),
+
+  UNIQUE KEY unique_user_alert (user_id, alert_id)
+);
 
 
 
@@ -154,4 +166,14 @@ ALTER TABLE alerts
   ADD COLUMN status ENUM('DRAFT','PUBLISHED','ARCHIVED') NOT NULL DEFAULT 'PUBLISHED',
   ADD COLUMN expires_at DATETIME NULL;
 
+CREATE TABLE webinar_registrations (
+  id BIGINT PRIMARY KEY AUTO_INCREMENT,
+  webinar_id BIGINT NOT NULL,
+  user_id BIGINT NOT NULL,
+  status ENUM('REGISTERED','CANCELLED','ATTENDED','NO_SHOW') NOT NULL DEFAULT 'REGISTERED',
+  registered_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  FOREIGN KEY (webinar_id) REFERENCES webinars(id),
+  FOREIGN KEY (user_id) REFERENCES users(id),
+  UNIQUE KEY uq_webinar_user (webinar_id, user_id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 

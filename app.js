@@ -36,6 +36,8 @@ app.use('/api/support-groups/update', updateSupportGroupRoutes);
 app.use('/api/support-groups', supportGroupsRoutes);
 const removeMemberRoutes = require('./routes/removeMemberRoutes.js');
 app.use('/api/support-groups/members/remove', removeMemberRoutes);
+const webinarRoutes = require('./routes/webinarsRoutes.js');
+app.use('/webinars', webinarRoutes);
 app.use('/api/counseling/sessions', counselingRoutes);
 app.use('/api/counseling/cancel', cancelSessionRoutes);
 app.use('/api/counseling/patient', patientSessionsRoutes);
@@ -93,4 +95,5 @@ app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(openapiDocument));
   console.log(`Server running on http://localhost:${PORT}`);
   console.log(`Swagger docs on http://localhost:${PORT}/api-docs`);
 });*/
+//console.log("DAILY_API_KEY:", process.env.DAILY_API_KEY);
 module.exports = app;

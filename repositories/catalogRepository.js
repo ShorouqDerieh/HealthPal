@@ -103,5 +103,16 @@ static async editStatus(id,status){
     const [result] = await db.query(sql, [status, id]);
     return result.affectedRows > 0;
 }
+static async getInventoryItemById(id) {
+  const sql = `
+    SELECT id, name, kind, form_factor, dosage_or_specs,
+           expiration_date, \`condition\`, quantity, unit, org_id
+    FROM inventory_items
+    WHERE id = ?
+  `;
+  const [rows] = await db.query(sql, [id]);
+  return rows[0] || null;
+}
+
 }
 module.exports=Catalog

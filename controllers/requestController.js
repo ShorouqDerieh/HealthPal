@@ -43,7 +43,24 @@ exports.viewRequest=async (req,res)=>
 };
 exports.viewAllRequests=async(req,res)=>{
   try{
-    const request= await model.showAllRequests()
+        const {
+      type,        
+      urgency,     
+      status,       
+      location_geo, 
+      search,      
+      requester_id  
+    } = req.query;
+     const filters = {
+      type,
+      urgency,
+      status,
+      location_geo,
+      search,
+      requester_id
+    };
+
+    const request= await model.showAllRequests(filters)
     if (!request) return res.status(404).json({ message: 'No request found' });
     res.status(200).json(request);
   } catch (err) {

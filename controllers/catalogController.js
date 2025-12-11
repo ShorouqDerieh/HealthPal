@@ -1,5 +1,6 @@
 const { query } = require('../database');
 const model=require('../repositories/catalogRepository')
+const UserOrgMembershipRepo = require('../repositories/userOrgMembershipRepository');
 exports.viewAllListings=async (req,res)=>
 {
     try{
@@ -36,6 +37,25 @@ exports.ViewOneItem=async(req,res)=>
   }
 }
 exports.addNewItem=async(req,res)=>{
+  const userId = req.user.id;
+   const membership = await UserOrgMembershipRepo.getOrgForUser(userId)
+    if (!membership) {
+      return res.status(403).json({
+        message: "You are not associated with any organization"
+      });
+    }
+    const inventoryItemId = req.body.inventory_item_id;
+    const inventoryItem = await model.getInventoryItemById(inventoryItemId)
+    if (!inventoryItem) {
+      return res.status(404).json({ message: "Inventory item not found" });
+    }
+
+    if (inventoryItem.org_id !== membership.org_id) {
+      return res.status(403).json({
+        message: "You can only list items that belong to your organization"
+      });
+    }
+    
   try{
     const item={
       inventory_item_id: req.body.inventory_item_id,

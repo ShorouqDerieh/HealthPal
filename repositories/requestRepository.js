@@ -27,12 +27,38 @@ const sql = `
     return rows[0]||null
 
 }
-static async showAllRequests(){
-  const sql=`SELECT * FROM requests`;
-  const [rows]=await db.query(sql)
-    return rows
+static async showAllRequests(filters={}){
+  let sql=`SELECT * FROM requests WHERE 1=1`;
+  const params = [];
+   if (filters.type) {
+    sql += " AND type = ?";
+    params.push(filters.type);
   }
-
+  if (filters.urgency) {
+   sql += " AND urgency = ?";
+    params.push(filters.urgency);
+  }
+  if (filters.status) {
+    sql += " AND status = ?";
+    params.push(filters.status);
+  }
+  if (filters.location_geo) {
+    sql += " AND location_geo = ?";
+    params.push(filters.location_geo);
+  }
+  if (filters.search) {
+    sql += " AND (name LIKE ? OR dosage_or_specs LIKE ?)";
+    params.push(`%${filters.search}%`);
+    params.push(`%${filters.search}%`);
+  }
+  if (filters.requester_id) {
+   sql+= " AND requester_user_id = ?";
+    params.push(filters.requester_id);
+  }
+  sql += " ORDER BY created_at DESC";
+  const [rows] = await db.query(sql, params);
+  return rows;
+}
   static async showMyRequests(id){
     const sql = `
     SELECT * FROM requests WHERE requester_user_id = ? ORDER BY created_at DESC

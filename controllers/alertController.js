@@ -170,3 +170,24 @@ exports.getAdminAlertById = async (req, res) => {
     res.status(500).json({ error: err.message });
   }
 };
+exports.markAlertAsRead = async (req, res) => {
+  try {
+    const userId = req.user.id;
+    const alertId = req.params.id;
+    await model.markAlertAsRead(userId, alertId);
+    res.status(200).json({ message: 'Alert marked as read' });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: err.message });
+  }
+};
+exports.getUnreadAlerts = async (req, res) => {
+  try {
+    const userId = req.user.id;
+    const alerts = await model.getUnreadAlerts(userId);
+    res.status(200).json(alerts);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: err.message });
+  }
+};

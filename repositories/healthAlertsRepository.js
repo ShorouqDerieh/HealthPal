@@ -218,5 +218,40 @@ class Alert{
     }
   }
     }
+    static async markAlertAsRead(userId, alertId) {
+  const [rows] = await db.query(
+    `SELECT * FROM user_alerts WHERE user_id = ? AND alert_id = ?`,
+    [userId, alertId]
+  );
+  if (rows.length > 0) {
+    await db.query(
+      `UPDATE user_alerts
+       SET is_read = TRUE, read_at = NOW()
+       WHERE user_id = ? AND alert_id = ?`,
+      [userId, alertId]
+    );
+  } else {
+    await db.query(
+      `INSERT INTO user_alerts (user_id, alert_id, is_read, read_at)
+       VALUES (?, ?, TRUE, NOW())`,
+      [userId, alertId]
+    );
+  }
+}
+static async getUnreadAlerts(userId) {
+  const [rows] = await db.query(
+    `
+    SELECT a.*
+    FROM alerts a
+    WHERE a.status = 'PUBLISHED'
+    AND a.id NOT IN (
+        SELECT alert_id FROM user_alerts WHERE user_id = ? AND is_read = TRUE
+    )
+    ORDER BY a.published_at DESC
+    `,
+    [userId]
+  );
+  return rows;
+}
   }
 module.exports=Alert
