@@ -1,7 +1,7 @@
 
 const db = require('../database');
 
-//module.exports = {
+
     async function createSession(data) {
         const sql = `
             INSERT INTO counseling_sessions

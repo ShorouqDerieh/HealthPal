@@ -1,5 +1,4 @@
-// services/createSupportGroupService.js
-const GroupsModel = require('../repositories/supportGroupsModel.js');
+const GroupsModel = require('../repositories/supportGroups.js');
 const UserModel = require('../repositories/users.js');
 async function create(name, description, category, created_by_user_id) {
 
@@ -10,7 +9,6 @@ async function create(name, description, category, created_by_user_id) {
     if (!await UserModel.exists(created_by_user_id)) {
         throw { status: 404, message: "Creator user not found" };
     }
-
     const result = await GroupsModel.createGroup({
         name,
         description,

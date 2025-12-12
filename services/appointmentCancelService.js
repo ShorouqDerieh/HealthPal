@@ -1,5 +1,5 @@
 // services/appointmentCancelService.js
-const Model = require('../repositories/appointmentCancelModel.js');
+const Model = require('../repositories/appointmentCancel.js');
 async function cancel(appointment_id) {
 
     if (!appointment_id) {

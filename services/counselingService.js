@@ -1,5 +1,5 @@
 // services/counselingService.js
-const CounselingModel = require('../repositories/counselingModel.js');
+const CounselingModel = require('../repositories/counseling.js');
 const UserModel = require('../repositories/users.js');
 const DoctorModel = require('../repositories/doctor.js');
 const PatientModel = require('../repositories/patient.js');

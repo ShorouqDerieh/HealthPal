@@ -1,6 +1,5 @@
 // services/updateSupportGroupService.js
-const GroupsModel = require('../repositories/updateSupportGroupModel.js');
-
+const GroupsModel = require('../repositories/updateSupportGroup.js');
 async function update(groupId, name, description, category) {
 
     if (!name) {

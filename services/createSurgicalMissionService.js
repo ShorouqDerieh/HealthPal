@@ -1,5 +1,5 @@
 // services/createSurgicalMissionService.js
-const MissionModel = require('../repositories/surgicalMissionModel.js');
+const MissionModel = require('../repositories/surgicalMission.js');
 
 async function create(title, location, date, speciality, max_patients, description) {
 

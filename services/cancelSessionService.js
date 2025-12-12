@@ -1,5 +1,5 @@
 // services/cancelSessionService.js
-const CancelModel = require('../repositories/cancelSessionModel');
+const CancelModel = require('../repositories/cancelSession.js');
 async function cancel(sessionId) {
     const rows = await CancelModel.findSessionById(sessionId);
 

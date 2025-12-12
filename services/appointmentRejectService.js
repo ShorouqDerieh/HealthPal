@@ -1,5 +1,5 @@
 // services/appointmentRejectService.js
-const AppointmentModel = require('../repositories/appointmentRejectModel.js');
+const AppointmentModel = require('../repositories/appointmentReject.js');
 const DoctorModel = require('../repositories/doctor.js');
 const UserModel = require('../repositories/users.js');
 async function reject(doctor_user_id, appointment_id) {

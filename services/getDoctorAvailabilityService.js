@@ -1,5 +1,5 @@
 // services/getDoctorAvailabilityService.js
-const AvailabilityModel = require('../repositories/getDoctorAvailabilityModel.js');
+const AvailabilityModel = require('../repositories/getDoctorAvailability.js');
 const UserModel = require('../repositories/users.js');
 const DoctorModel = require('../repositories/doctor.js');
 async function getAll(doctor_user_id) {

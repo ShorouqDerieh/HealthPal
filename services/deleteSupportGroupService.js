@@ -1,5 +1,5 @@
 // services/deleteSupportGroupService.js
-const GroupsModel = require('../repositories/deleteSupportGroupModel.js');
+const GroupsModel = require('../repositories/deleteSupportGroup.js');
 async function remove(groupId) {
 
     // if group exists

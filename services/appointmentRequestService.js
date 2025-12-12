@@ -1,5 +1,5 @@
 // services/appointmentRequestService.js
-const AppointmentModel = require('../repositories/appointmentRequestModel.js');
+const AppointmentModel = require('../repositories/appointmentRequest.js');
 const UserModel = require('../repositories/users.js');
 const DoctorModel = require('../repositories/doctor.js');
 async function request(patient_user_id, slot_id) {

@@ -1,5 +1,5 @@
 // services/getMissionPatientsService.js
-const Model = require('../repositories/getMissionPatientsModel.js');
+const Model = require('../repositories/getMissionPatients.js');
 async function list(mission_id) {
 
     if (!mission_id) {

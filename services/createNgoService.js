@@ -1,5 +1,5 @@
 // services/createNgoService.js
-const NgoModel = require('../repositories/ngosModel.js');
+const NgoModel = require('../repositories/ngos.js');
 
 async function create(name, description, country) {
 

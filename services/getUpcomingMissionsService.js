@@ -1,5 +1,5 @@
 // services/getUpcomingMissionsService.js
-const Model = require('../repositories/getUpcomingMissionsModel.js');
+const Model = require('../repositories/getUpcomingMissions.js');
 
 async function list() {
 

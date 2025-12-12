@@ -1,5 +1,5 @@
 // services/getPatientAppointmentsService.js
-const AppointmentsModel = require('../repositories/getPatientAppointmentsModel.js');
+const AppointmentsModel = require('../repositories/getPatientAppointments.js');
 const UserModel = require('../repositories/users.js');
 async function getAll(patient_user_id) {
 

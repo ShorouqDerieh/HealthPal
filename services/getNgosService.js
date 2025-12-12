@@ -1,5 +1,5 @@
 // services/getNgosService.js
-const NgoModel = require('../repositories/getNgosModel.js');
+const NgoModel = require('../repositories/getNgos.js');
 async function getAll() {
     const ngos = await NgoModel.getAll();
     return ngos;

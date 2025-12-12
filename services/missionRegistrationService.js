@@ -1,5 +1,5 @@
 // services/missionRegistrationService.js
-const Model = require('../repositories/missionRegistrationModel.js');
+const Model = require('../repositories/missionRegistration.js');
 
 async function register(mission_id, patient_user_id, notes) {
 

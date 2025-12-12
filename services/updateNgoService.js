@@ -1,5 +1,5 @@
 // services/updateNgoService.js
-const NgoModel = require('../repositories/updateNgoModel.js');
+const NgoModel = require('../repositories/updateNgo.js');
 
 async function update(ngoId, name, description, country) {
 

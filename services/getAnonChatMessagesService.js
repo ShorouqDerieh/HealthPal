@@ -1,5 +1,5 @@
 // services/getAnonChatMessagesService.js
-const ChatModel = require('../repositories/getAnonChatMessagesModel.js');
+const ChatModel = require('../repositories/getAnonChatMessages.js');
 async function getMessages(chat_id) {
 
     if (!chat_id) {

@@ -1,13 +1,11 @@
 const db = require('../database');
 
-// Check if NGO exists
 async function ngoExists(id) {
     const sql = `SELECT id FROM ngos WHERE id = ? LIMIT 1`;
     const [rows] = await db.query(sql, [id]);
     return rows.length > 0;
 }
 
-// Update NGO fields
 async function updateNgo(id, data) {
     const sql = `
         UPDATE ngos 
@@ -24,7 +22,6 @@ async function updateNgo(id, data) {
 
     return result;
 }
-
 module.exports = {
     ngoExists,
     updateNgo

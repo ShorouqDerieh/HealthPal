@@ -1,5 +1,5 @@
 // services/missionApproveService.js
-const Model = require('../repositories/missionApproveModel.js');
+const Model = require('../repositories/missionApprove.js');
 
 async function approve(registration_id) {
 

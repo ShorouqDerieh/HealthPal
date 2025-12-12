@@ -1,5 +1,5 @@
 // services/missionRejectService.js
-const Model = require('../repositories/missionRejectModel.js');
+const Model = require('../repositories/missionReject.js');
 
 async function reject(registration_id) {
 

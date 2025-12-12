@@ -1,4 +1,4 @@
-const ChatModel = require('../repositories/anonChatModel.js');
+const ChatModel = require('../repositories/anonChat.js');
 const UserModel = require('../repositories/users.js');
 const DoctorModel = require('../repositories/doctor.js');
 function generatePseudonym() {

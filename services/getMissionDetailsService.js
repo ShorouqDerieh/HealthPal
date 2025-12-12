@@ -1,5 +1,5 @@
 // services/getMissionDetailsService.js
-const Model = require('../repositories/getMissionDetailsModel.js');
+const Model = require('../repositories/getMissionDetails.js');
 async function getOne(mission_id) {
 
     if (!mission_id) {

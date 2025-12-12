@@ -1,8 +1,7 @@
 // services/supportGroupMessageService.js
-const MessagesModel = require('../repositories/supportGroupMessagesModel.js');
-const MembersModel = require('../repositories/supportGroupMembersModel.js');
+const MessagesModel = require('../repositories/supportGroupMessages.js');
+const MembersModel = require('../repositories/supportGroupMembers.js');
 const UserModel = require('../repositories/users.js');
-
 async function send(group_id, sender_user_id, message_text) {
 
     if (!group_id || !sender_user_id || !message_text) {

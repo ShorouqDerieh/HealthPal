@@ -1,5 +1,5 @@
 // services/appointmentApproveService.js
-const AppointmentModel = require('../repositories/appointmentApproveModel.js');
+const AppointmentModel = require('../repositories/appointmentApprove.js');
 const DoctorModel = require('../repositories/doctor.js');
 const UserModel = require('../repositories/users.js');
 async function approve(doctor_user_id, appointment_id) {
