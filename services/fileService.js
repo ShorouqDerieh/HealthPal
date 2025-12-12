@@ -4,7 +4,7 @@ exports.upload = async (req, res) => {
     if (!req.file) {
       return res.status(400).json({ message: 'No file uploaded' });
     }
-    const fileUrl = `/upload/${req.file.filename}`;
+    const fileUrl = `/uploads/${req.file.filename}`;
     const mime = req.file.mimetype;
     const userId = req.user.id || null;
 
