@@ -21,6 +21,27 @@ WHERE u.email='Zinab@gmail.com' AND s.name='Mental Health'
 
 
 
+CREATE TABLE IF NOT EXISTS patient_donation_feedback (
+  id BIGINT PRIMARY KEY AUTO_INCREMENT,
+  donation_id BIGINT NOT NULL,
+  patient_user_id BIGINT NOT NULL,
+  rating TINYINT NULL,
+  feedback_text TEXT NOT NULL,
+  is_public BOOLEAN NOT NULL DEFAULT FALSE,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    ON UPDATE CURRENT_TIMESTAMP,
+  FOREIGN KEY (donation_id) REFERENCES donations(id),
+  FOREIGN KEY (patient_user_id) REFERENCES users(id),
+  INDEX idx_pdf_donation (donation_id),
+  INDEX idx_pdf_patient (patient_user_id),
+  INDEX idx_pdf_public (is_public)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+
+
+
+
 
 
 
