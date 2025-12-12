@@ -1,6 +1,7 @@
 const express = require('express')
 const bodyParser = require('body-parser')
 const app = express();
+require('dotenv').config();
 app.use(bodyParser.json());
 // counseling & sessions
 const counselingRoutes = require('./routes/counselingRoutes.js');
@@ -47,7 +48,6 @@ app.use('/health-guides', healthGuideRoutes);
 const cors = require('cors');
 const helmet = require('helmet');
 const rateLimit = require('express-rate-limit');
-require('dotenv').config();
 const swaggerUi = require("swagger-ui-express");
 const YAML = require("yamljs");
 const openapiDocument = YAML.load("./openapi/openapi.yaml");
