@@ -1,40 +1,24 @@
-const MembersModel = require('../repositories/supportGroupMembersModel.js');
-const UserModel = require('../repositories/users.js');
+// controllers/addGroupMemberController.js
+const AddGroupMemberService = require('../services/addGroupMemberService.js');
 
 async function add(req, res) {
     try {
         const { group_id, user_id } = req.body;
 
-        if (!group_id || !user_id) {
-            return res.status(400).json({ error: "Missing required fields" });
-        }
-
-        if (!await UserModel.exists(user_id)) {
-            return res.status(404).json({ error: "User does not exist" });
-        }
-
-        if (!await MembersModel.patientExists(user_id)) {
-            return res.status(400).json({ error: "User is not a patient" });
-        }
-
-        if (!await MembersModel.groupExists(group_id)) {
-            return res.status(404).json({ error: "Group does not exist" });
-        }
-
-        if (await MembersModel.isMember(group_id, user_id)) {
-            return res.status(400).json({ error: "User is already in this group" });
-        }
-
-        const result = await MembersModel.addMember({ group_id, user_id });
+        const memberId = await AddGroupMemberService.add(
+            group_id,
+            user_id
+        );
 
         return res.status(201).json({
             message: "Member added to group",
-            member_id: result.insertId
+            member_id: memberId
         });
 
     } catch (err) {
-        return res.status(500).json({ error: err.message }); // ← تم تصحيحها
+        return res.status(err.status || 500).json({
+            error: err.message
+        });
     }
 }
-
 module.exports = { add };

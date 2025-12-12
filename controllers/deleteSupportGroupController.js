@@ -1,22 +1,20 @@
-const GroupsModel = require('../repositories/deleteSupportGroupModel.js');
-
+// controllers/deleteSupportGroupController.js
+const DeleteSupportGroupService = require('../services/deleteSupportGroupService.js');
 async function remove(req, res) {
     try {
         const groupId = req.params.id;
-        //if group exists
-        const group = await GroupsModel.getGroupById(groupId);
-        if (!group) {
-            return res.status(404).json({ error: "Group not found" });
-        }
-        //delete
-        const result = await GroupsModel.deleteGroup(groupId);
+
+        const deletedId = await DeleteSupportGroupService.remove(groupId);
 
         return res.status(200).json({
             message: "Group deleted successfully",
-            deleted_group_id: groupId
+            deleted_group_id: deletedId
         });
+
     } catch (err) {
-        return res.status(500).json({ error: err.message });
+        return res.status(err.status || 500).json({
+            error: err.message
+        });
     }
 }
 module.exports = {

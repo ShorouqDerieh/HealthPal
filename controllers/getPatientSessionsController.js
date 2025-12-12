@@ -1,15 +1,14 @@
-const PatientSessionsModel = require('../repositories/getPatientSessionsModel.js');
-const UserModel = require('../repositories/users.js');
+// controllers/getPatientSessionsController.js
+const GetPatientSessionsService = require('../services/getPatientSessionsService.js');
 
 module.exports = {
     async getByPatient(req, res) {
         try {
             const patientId = req.params.id;
 
-            if (!await UserModel.exists(patientId))
-                return res.status(404).json({ error: "Patient not found" });
-
-            const sessions = await PatientSessionsModel.getSessionsByPatient(patientId);
+            const sessions = await GetPatientSessionsService.getByPatient(
+                patientId
+            );
 
             return res.status(200).json({
                 patient_id: patientId,
@@ -17,7 +16,9 @@ module.exports = {
             });
 
         } catch (err) {
-            return res.status(500).json({ error: err.message });
+            return res.status(err.status || 500).json({
+                error: err.message
+            });
         }
     }
 };
