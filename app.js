@@ -14,7 +14,7 @@ const deleteSupportGroupRoutes = require('./routes/deleteSupportGroupRoutes.js')
 const supportGroupMembersRoutes = require('./routes/supportGroupMembersRoutes.js');
 const joinRequestRoutes = require('./routes/joinRequestRoutes.js');
 const messagesRoutes = require('./routes/supportGroupMessagesRoutes.js');
-const removeMemberRoutes = require('./routes/removeMemberRoutes.js');
+//const removeMemberRoutes = require('./routes/removeMemberRoutes.js');
 // anonymous Chat
 const anonChatRoutes = require('./routes/anonChatRoutes.js');
 const anonChatMessagesRoutes = require('./routes/anonChatMessagesRoutes.js');
