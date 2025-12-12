@@ -1,25 +1,27 @@
-const NgoModel = require('../repositories/ngosModel.js');
+// controllers/createNgoController.js
+const CreateNgoService = require('../services/createNgoService.js');
+
 async function create(req, res) {
     try {
         const { name, description, country } = req.body;
-        if (!name) {
-            return res.status(400).json({ error: "NGO name is required" });
-        }
-        const ngoId = await NgoModel.createNgo({
+
+        const ngoId = await CreateNgoService.create(
             name,
             description,
             country
-        });
+        );
+
         return res.status(201).json({
             message: "NGO created successfully",
             ngo_id: ngoId
         });
 
     } catch (err) {
-        return res.status(500).json({ error: err.message });
+        return res.status(err.status || 500).json({
+            error: err.message
+        });
     }
 }
 module.exports = {
     create
 };
-

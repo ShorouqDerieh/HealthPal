@@ -1,31 +1,28 @@
-const MessagesModel = require('../repositories/supportGroupMessagesModel.js');
-const MembersModel = require('../repositories/supportGroupMembersModel.js');
-const UserModel = require('../repositories/users.js');
+// controllers/supportGroupMessageController.js
+const SupportGroupMessageService = require('../services/supportGroupMessageService.js');
+
 async function send(req, res) {
     try {
         const { group_id, sender_user_id, message_text } = req.body;
-        if (!group_id || !sender_user_id || !message_text) {
-            return res.status(400).json({ error: "Missing required fields" });
-        }
-        if (!await UserModel.exists(sender_user_id)) {
-            return res.status(404).json({ error: "User does not exist" });
-        }
-        if (!await MembersModel.isMember(group_id, sender_user_id)) {
-            return res.status(403).json({ error: "User is not a member of this group" });
-        }
-        const result = await MessagesModel.sendMessage({
+
+        const messageId = await SupportGroupMessageService.send(
             group_id,
             sender_user_id,
             message_text
-        });
+        );
+
         return res.status(201).json({
             message: "Message sent successfully",
-            message_id: result.insertId
+            message_id: messageId
         });
+
     } catch (err) {
-        return res.status(500).json({ error: err.message });
+        return res.status(err.status || 500).json({
+            error: err.message
+        });
     }
 }
+
 module.exports = {
     send
 };

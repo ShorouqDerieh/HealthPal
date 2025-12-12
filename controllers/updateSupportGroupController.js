@@ -1,33 +1,30 @@
-const GroupsModel = require('../repositories/updateSupportGroupModel.js');
+// controllers/updateSupportGroupController.js
+const UpdateSupportGroupService = require('../services/updateSupportGroupService.js');
+
 async function update(req, res) {
     try {
         const groupId = req.params.id;
         const { name, description, category } = req.body;
 
-        if (!name) {
-            return res.status(400).json({ error: "Group name is required" });
-        }
-
-        const existing = await GroupsModel.getGroupById(groupId);
-        if (!existing) {
-            return res.status(404).json({ error: "Group not found" });
-        }
-
-        await GroupsModel.updateGroup(groupId, {
+        const updatedGroupId = await UpdateSupportGroupService.update(
+            groupId,
             name,
             description,
             category
-        });
+        );
 
         return res.status(200).json({
             message: "Group updated successfully",
-            group_id: groupId
+            group_id: updatedGroupId
         });
 
     } catch (err) {
-        return res.status(500).json({ error: err.message });
+        return res.status(err.status || 500).json({
+            error: err.message
+        });
     }
 }
+
 module.exports = {
     update
 };

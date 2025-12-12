@@ -1,11 +1,4 @@
-const ChatModel = require('../repositories/anonChatModel.js');
-const UserModel = require('../repositories/users.js');
-const DoctorModel = require('../repositories/doctor.js');
-
-function generatePseudonym() {
-    return "anon_" + Math.floor(100000 + Math.random() * 900000);
-}
-
+const ChatService = require('../services/anonChatService.js');
 async function start(req, res) {
     try {
         const { counselor_id } = req.body;
@@ -14,22 +7,20 @@ async function start(req, res) {
             return res.status(400).json({ error: "Missing counselor_id" });
         }
 
-        if (!await UserModel.exists(counselor_id) || !await DoctorModel.isDoctor(counselor_id)) {
-            return res.status(404).json({ error: "Counselor not found" });
-        }
-
-        const pseudonym = generatePseudonym();
-        const chat_id = await ChatModel.createSession(counselor_id, pseudonym);
-
+        const result = await ChatService.startAnonymousChat(counselor_id);
         return res.status(201).json({
             message: "Anonymous chat started",
-            chat_id,
-            pseudonym
+            chat_id: result.chat_id,
+            pseudonym: result.pseudonym
         });
 
     } catch (err) {
+        if (err.message === "Counselor not found") {
+            return res.status(404).json({ error: err.message });
+        }
+
         return res.status(500).json({ error: err.message });
     }
 }
-
 module.exports = { start };
+
