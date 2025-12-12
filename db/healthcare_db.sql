@@ -129,18 +129,11 @@ CREATE TABLE donations (
 
 
 
--- Recommended session defaults
+
 SET NAMES utf8mb4;
 SET time_zone = '+00:00';
 
--- Use InnoDB & utf8mb4 everywhere
--- You can wrap in a schema if you prefer:
--- CREATE DATABASE healthpal CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
--- USE healthpal;
 
--- =====================================================================
--- SHARED / SECURITY / AUDIT
--- =====================================================================
 
 CREATE TABLE files (
   id BIGINT PRIMARY KEY AUTO_INCREMENT,
@@ -152,15 +145,6 @@ CREATE TABLE files (
   FOREIGN KEY (owner_user_id) REFERENCES users(id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
-CREATE TABLE consents (
-  id BIGINT PRIMARY KEY AUTO_INCREMENT,
-  user_id BIGINT NOT NULL,
-  scope VARCHAR(64) NOT NULL,            -- e.g., 'share_medical_history', 'public_case_page'
-  granted_at DATETIME NOT NULL,
-  revoked_at DATETIME NULL,
-  UNIQUE KEY uq_user_scope (user_id, scope, granted_at),
-  FOREIGN KEY (user_id) REFERENCES users(id)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 CREATE TABLE audit_logs (
   id BIGINT PRIMARY KEY AUTO_INCREMENT,
@@ -219,23 +203,7 @@ CREATE TABLE consult_messages (
   INDEX (session_id, created_at)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
-CREATE TABLE translation_requests (
-  id BIGINT PRIMARY KEY AUTO_INCREMENT,
-  session_id BIGINT NOT NULL,
-  source_lang VARCHAR(8) NOT NULL,       -- e.g., 'ar'
-  target_lang VARCHAR(8) NOT NULL,       -- e.g., 'en'
-  request_text TEXT NOT NULL,
-  translated_text TEXT NULL,
-  translator_user_id BIGINT NULL,        -- could be staff/volunteer
-  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-  FOREIGN KEY (session_id) REFERENCES consult_sessions(id),
-  FOREIGN KEY (translator_user_id) REFERENCES users(id),
-  INDEX (session_id, created_at)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
--- =====================================================================
--- SPONSORSHIP TRANSPARENCY (remaining tables)
--- =====================================================================
 
 CREATE TABLE financial_documents (
   id BIGINT PRIMARY KEY AUTO_INCREMENT,
@@ -429,16 +397,6 @@ CREATE TABLE support_group_members (
   FOREIGN KEY (user_id) REFERENCES users(id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
-CREATE TABLE support_group_messages (
-  id BIGINT PRIMARY KEY AUTO_INCREMENT,
-  group_id BIGINT NOT NULL,
-  sender_user_id BIGINT NULL,         -- NULL when anonymous
-  message_text TEXT NOT NULL,
-  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-  FOREIGN KEY (group_id) REFERENCES support_groups(id),
-  FOREIGN KEY (sender_user_id) REFERENCES users(id),
-  INDEX (group_id, created_at)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 CREATE TABLE anon_chats (
   id BIGINT PRIMARY KEY AUTO_INCREMENT,
@@ -461,85 +419,10 @@ CREATE TABLE anon_chat_messages (
   INDEX (chat_id, created_at)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
--- =====================================================================
--- NGOS & MEDICAL MISSIONS
--- =====================================================================
 
-CREATE TABLE missions (
-  id BIGINT PRIMARY KEY AUTO_INCREMENT,
-  org_id BIGINT NOT NULL,
-  name VARCHAR(255) NOT NULL,
-  description TEXT NULL,
-  region VARCHAR(128) NOT NULL,
-  starts_at DATETIME NOT NULL,
-  ends_at DATETIME NOT NULL,
-  mission_type ENUM('mobile_clinic','surgery_camp','specialist_visit') NOT NULL,
-  status ENUM('PLANNED','ONGOING','COMPLETED','CANCELLED') NOT NULL DEFAULT 'PLANNED',
-  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-  FOREIGN KEY (org_id) REFERENCES organizations(id),
-  INDEX (region, starts_at),
-  CHECK (ends_at > starts_at)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
-CREATE TABLE mission_slots (
-  id BIGINT PRIMARY KEY AUTO_INCREMENT,
-  mission_id BIGINT NOT NULL,
-  doctor_user_id BIGINT NULL,          -- may be assigned later
-  slot_starts_at DATETIME NOT NULL,
-  slot_ends_at DATETIME NOT NULL,
-  location VARCHAR(255) NULL,
-  capacity INT NOT NULL DEFAULT 1,
-  filled_count INT NOT NULL DEFAULT 0,
-  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-  FOREIGN KEY (mission_id) REFERENCES missions(id),
-  FOREIGN KEY (doctor_user_id) REFERENCES users(id),
-  INDEX (mission_id, slot_starts_at),
-  CHECK (slot_ends_at > slot_starts_at),
-  CHECK (filled_count <= capacity)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
-CREATE TABLE mission_requests (
-  id BIGINT PRIMARY KEY AUTO_INCREMENT,
-  mission_id BIGINT NOT NULL,
-  requester_user_id BIGINT NOT NULL,
-  requested_service VARCHAR(255) NOT NULL,
-  status ENUM('PENDING','APPROVED','REJECTED','SERVED','CANCELLED') NOT NULL DEFAULT 'PENDING',
-  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-  FOREIGN KEY (mission_id) REFERENCES missions(id),
-  FOREIGN KEY (requester_user_id) REFERENCES users(id),
-  INDEX (mission_id, status)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
--- =====================================================================
--- EXTERNAL API INTEGRATIONS
--- =====================================================================
-
-CREATE TABLE external_providers (
-  id BIGINT PRIMARY KEY AUTO_INCREMENT,
-  name VARCHAR(128) NOT NULL,
-  type ENUM('alert_feed','knowledge_base','telemetry') NOT NULL,
-  base_url VARCHAR(512) NULL,
-  api_key_ref VARCHAR(128) NULL,     -- reference to secrets manager, not the key itself
-  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-  UNIQUE KEY uq_extprov_name (name)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
-CREATE TABLE provider_sync_logs (
-  id BIGINT PRIMARY KEY AUTO_INCREMENT,
-  provider_id BIGINT NOT NULL,
-  started_at DATETIME NOT NULL,
-  ended_at DATETIME NULL,
-  status ENUM('SUCCESS','PARTIAL','FAILED') NOT NULL,
-  fetched_count INT NOT NULL DEFAULT 0,
-  error_blob TEXT NULL,
-  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-  FOREIGN KEY (provider_id) REFERENCES external_providers(id),
-  INDEX (provider_id, started_at)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
--- =====================================================================
--- OPTIONAL QUALITY-OF-LIFE INDEXES (add as needed under load)
--- =====================================================================
 
 -- Example: speeding up transparency dashboard joins
 CREATE INDEX idx_fin_docs_campaign ON financial_documents (campaign_id, type, issued_at);
@@ -566,30 +449,7 @@ CREATE INDEX idx_requests_triage ON requests (status, urgency, created_at);
 
 
 
--- 1) Transparency: campaign updates & feedback
-CREATE TABLE campaign_updates (
-  id BIGINT PRIMARY KEY AUTO_INCREMENT,
-  campaign_id BIGINT NOT NULL,
-  author_user_id BIGINT NULL,                 -- staff/NGO or patient
-  title VARCHAR(255) NOT NULL,
-  body TEXT NOT NULL,
-  published_at DATETIME NOT NULL,
-  FOREIGN KEY (campaign_id) REFERENCES sponsorship_campaigns(id),
-  FOREIGN KEY (author_user_id) REFERENCES users(id),
-  INDEX (campaign_id, published_at)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
-CREATE TABLE campaign_feedback (
-  id BIGINT PRIMARY KEY AUTO_INCREMENT,
-  campaign_id BIGINT NOT NULL,
-  from_user_id BIGINT NULL,                   -- donors/patients can leave feedback
-  rating TINYINT NOT NULL CHECK (rating BETWEEN 1 AND 5),
-  comment TEXT NULL,
-  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-  FOREIGN KEY (campaign_id) REFERENCES sponsorship_campaigns(id),
-  FOREIGN KEY (from_user_id) REFERENCES users(id),
-  INDEX (campaign_id, created_at)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- 2) Crowdsourced listings by individuals
 ALTER TABLE listings
@@ -624,13 +484,7 @@ CREATE TABLE patient_records (
   INDEX (patient_user_id, recorded_at)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
-CREATE TABLE patient_record_files (
-  record_id BIGINT NOT NULL,
-  file_id BIGINT NOT NULL,
-  PRIMARY KEY (record_id, file_id),
-  FOREIGN KEY (record_id) REFERENCES patient_records(id),
-  FOREIGN KEY (file_id) REFERENCES files(id)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
 
 -- 5) Optional: status history for key flows (example for requests)
 CREATE TABLE request_status_history (
@@ -646,15 +500,7 @@ CREATE TABLE request_status_history (
   INDEX (request_id, changed_at)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
--- 6) Optional: auth QoL (reset tokens & notification prefs)
-CREATE TABLE password_reset_tokens (
-  token CHAR(64) PRIMARY KEY,
-  user_id BIGINT NOT NULL,
-  expires_at DATETIME NOT NULL,
-  used_at DATETIME NULL,
-  FOREIGN KEY (user_id) REFERENCES users(id),
-  INDEX (user_id, expires_at)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
 
 CREATE TABLE notification_preferences (
   user_id BIGINT PRIMARY KEY,

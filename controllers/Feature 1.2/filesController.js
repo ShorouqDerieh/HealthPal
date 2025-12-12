@@ -1,76 +1,17 @@
+const FilesRepository = require("../../repositories/Feature 1.2/filesRepository");
+const FilesService = require("../../services/Feature 1.2/filesService");
 
-const pool = require("../../database");
-
+const repository = new FilesRepository();
+const service = new FilesService(repository);
 
 async function uploadFileMeta(req, res) {
-  const userId = req.user?.id;
-  const { storage_url, mime, sha256 } = req.body;
-
-  if (!userId) {
-    return res.status(401).json({ message: "Missing or invalid token" });
-  }
-
-  const conn = await pool.getConnection();
-  try {
-    const [result] = await conn.query(
-      `INSERT INTO files (owner_user_id, storage_url, mime, sha256, created_at)
-       VALUES (?, ?, ?, ?, NOW())`,
-      [userId, storage_url, mime || null, sha256 || null]
-    );
-
-    const fileId = result.insertId;
-
-    const [rows] = await conn.query(
-      `SELECT id, owner_user_id, storage_url, mime, sha256, created_at
-         FROM files
-        WHERE id = ?`,
-      [fileId]
-    );
-
-    return res.status(201).json({
-      message: "File metadata stored",
-      file: rows[0],
-    });
-  } catch (err) {
-    console.error("uploadFileMeta error:", err);
-    return res.status(500).json({ message: "Internal server error" });
-  } finally {
-    conn.release();
-  }
+  const result = await service.uploadFileMeta(req.user, req.body);
+  return res.status(result.status).json(result.payload);
 }
-
 
 async function getFileMeta(req, res) {
-  const userId = req.user?.id;
-  const fileId = req.params.id;
-
-  if (!userId) {
-    return res.status(401).json({ message: "Missing or invalid token" });
-  }
-
-  const conn = await pool.getConnection();
-  try {
-    const [rows] = await conn.query(
-      `SELECT id, owner_user_id, storage_url, mime, sha256, created_at
-         FROM files
-        WHERE id = ?`,
-      [fileId]
-    );
-
-    if (!rows.length) {
-      return res.status(404).json({ message: "File not found" });
-    }
-
-    return res.status(200).json({ file: rows[0] });
-  } catch (err) {
-    console.error("getFileMeta error:", err);
-    return res.status(500).json({ message: "Internal server error" });
-  } finally {
-    conn.release();
-  }
+  const result = await service.getFileMeta(req.user, req.params);
+  return res.status(result.status).json(result.payload);
 }
 
-module.exports = {
-  uploadFileMeta,
-  getFileMeta,
-};
+module.exports = { uploadFileMeta, getFileMeta };
