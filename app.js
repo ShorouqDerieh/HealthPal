@@ -62,8 +62,8 @@ const rateLimit = require('express-rate-limit');
 require('dotenv').config();
 const swaggerUi = require("swagger-ui-express");
 const YAML = require("yamljs");
-const openapiDocument = YAML.load("./openapi.yaml");
-console.log("JWT_SECRET =", process.env.JWT_SECRET);
+const openapiDocument = YAML.load("./openapi/openapi.yaml");
+//console.log("JWT_SECRET =", process.env.JWT_SECRET);
 const authRoutes = require('./routes/Feature 1.1/authRoutes');
 const appointmentsRoutes = require('./routes/Feature 1.1/appointmentsRoutes');
 const checker=require('./jobs/expiryCheck')
@@ -73,7 +73,6 @@ app.use('/catalog',listing)
 app.use('/matches',matches)
 app.use('/deliveries',deliveries)
 app.use(express.json());
-app.use(cors());
 app.use(helmet());
 app.use(rateLimit({ windowMs: 60_000, max: 120 }));
 app.get('/', (req, res) => res.send('Welcome to HealthPal API'));

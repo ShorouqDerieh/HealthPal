@@ -4,9 +4,9 @@ const UserOrgMembershipRepo = require('../repositories/userOrgMembershipReposito
 
 exports.viewAllListings = async (req, res) => {
   try {
-    if (!req.user || !req.user.id) {
+    /* if (!req.user || !req.user.id) {
       return res.status(401).json({ message: "Missing or invalid token" });
-    }
+    } */
     const { kind, search, condition, sort, order } = req.query
     const request = await model.viewItems(
       {
