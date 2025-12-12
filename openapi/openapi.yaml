@@ -1,0 +1,726 @@
+openapi: 3.0.3
+info:
+  title: HealthPal API
+  version: 1.0.0
+  description: |
+    HealthPal backend API documentation.
+    Includes:
+    - Auth
+    - Doctors
+    - Appointments
+    - Consult Sessions (Telehealth)
+    - Translation
+    - Medical Sponsorship (Feature 2)
+
+servers:
+  - url: http://localhost:3100
+    description: Local server
+
+tags:
+  - name: Auth
+  - name: Doctors
+  - name: Appointments
+  - name: Consult
+  - name: Translation
+  - name: Sponsorship
+
+paths:
+  ########################################
+  # ROOT
+  ########################################
+  /:
+    get:
+      tags: [Auth]
+      summary: API root
+      responses:
+        "200":
+          description: Welcome message
+
+  ########################################
+  # AUTH
+  ########################################
+
+  /auth/register:
+    post:
+      tags: [Auth]
+      summary: Register a new user
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/RegisterRequest"
+      responses:
+        "201":
+          description: User registered
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AuthUserResponse"
+
+  /auth/login:
+    post:
+      tags: [Auth]
+      summary: Login user and return JWT token
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/LoginRequest"
+      responses:
+        "200":
+          description: Login successful
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/LoginResponse"
+
+
+  ########################################
+  # DOCTORS
+  ########################################
+
+  /doctors:
+    get:
+      tags: [Doctors]
+      summary: List/search doctors
+      responses:
+        "200":
+          description: List of doctors
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/DoctorSummary"
+
+  /doctors/{id}/availability:
+    get:
+      tags: [Doctors]
+      summary: Get doctor availability
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Availability list
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/DoctorAvailabilitySlot"
+
+    post:
+      tags: [Doctors]
+      summary: Add availability slot (doctor only)
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema: { type: integer }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/AddAvailabilityRequest"
+      responses:
+        "201":
+          description: Added
+
+
+  ########################################
+  # APPOINTMENTS
+  ########################################
+
+  /appointments:
+    post:
+      tags: [Appointments]
+      summary: Create new appointment
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateAppointmentRequest"
+      responses:
+        "201":
+          description: Appointment created
+
+  /appointments/my:
+    get:
+      tags: [Appointments]
+      summary: List my appointments
+      security:
+        - bearerAuth: []
+      responses:
+        "200":
+          description: Appointment list
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Appointment"
+
+  /appointments/{id}:
+    get:
+      tags: [Appointments]
+      summary: Appointment details
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema: { type: integer }
+      responses:
+        "200":
+          description: Appointment info
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Appointment"
+
+  /appointments/{id}/confirm:
+    patch:
+      tags: [Appointments]
+      summary: Confirm appointment (doctor)
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: id
+          required: true
+      responses:
+        "200":
+          description: Appointment confirmed
+
+  /appointments/{id}/cancel:
+    patch:
+      tags: [Appointments]
+      summary: Cancel appointment
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: id
+          required: true
+      responses:
+        "200":
+          description: Appointment canceled
+
+
+  ########################################
+  # CONSULT SESSIONS (TELEHEALTH)
+  ########################################
+
+  /consult/sessions/audio:
+    post:
+      tags: [Consult]
+      summary: Start audio session
+      security:
+        - bearerAuth: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/StartAudioSessionRequest"
+      responses:
+        "201":
+          description: Session created
+
+  /consult/sessions/async:
+    post:
+      tags: [Consult]
+      summary: Start async session
+      security:
+        - bearerAuth: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/StartAsyncSessionRequest"
+      responses:
+        "201":
+          description: Created
+
+
+  /consult/sessions/{id}/bandwidth:
+    patch:
+      tags: [Consult]
+      summary: Update session bandwidth mode
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: id
+          required: true
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UpdateBandwidthRequest"
+      responses:
+        "200":
+          description: Updated
+
+
+  /consult/sessions/{id}/end:
+    post:
+      tags: [Consult]
+      summary: End session
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: id
+          required: true
+      responses:
+        "200":
+          description: Ended
+
+
+  /consult/sessions/{id}/messages:
+    post:
+      tags: [Consult]
+      summary: Send message
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: id
+          required: true
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PostMessageRequest"
+      responses:
+        "201":
+          description: Message created
+
+    get:
+      tags: [Consult]
+      summary: List messages
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: id
+          required: true
+      responses:
+        "200":
+          description: Message list
+
+
+  /consult/sessions/{id}/messages/unread:
+    get:
+      tags: [Consult]
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: id
+          required: true
+      summary: Get unread messages
+      responses:
+        "200":
+          description: List unread
+
+
+  /consult/sessions/{id}/messages/stream:
+    get:
+      tags: [Consult]
+      summary: Poll recent messages
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: id
+          required: true
+      responses:
+        "200":
+          description: Messages
+
+
+  /consult/files:
+    post:
+      tags: [Consult]
+      summary: Upload file metadata
+      security:
+        - bearerAuth: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/FileUploadMetaRequest"
+      responses:
+        "201":
+          description: File metadata added
+
+
+  /consult/files/{id}:
+    get:
+      tags: [Consult]
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: id
+          required: true
+      summary: Get file metadata
+      responses:
+        "200":
+          description: File metadata
+
+
+  /consult/sessions/{id}/typing:
+    post:
+      tags: [Consult]
+      summary: Update typing status
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: id
+          required: true
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/TypingStatusRequest"
+      responses:
+        "200":
+          description: OK
+
+    get:
+      tags: [Consult]
+      summary: Get session typing status
+      parameters:
+        - in: path
+          name: id
+          required: true
+      security:
+        - bearerAuth: []
+      responses:
+        "200":
+          description: Typing status
+
+
+  ########################################
+  # TRANSLATION
+  ########################################
+
+  /translation/preview:
+    post:
+      tags: [Translation]
+      summary: Translate text preview
+      security:
+        - bearerAuth: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/TranslatePreviewRequest"
+      responses:
+        "200":
+          description: Translation result
+
+
+  ########################################
+  # SPONSORSHIP (FEATURE 2)
+  ########################################
+
+  /sponsorship/treatments:
+    post:
+      tags: [Sponsorship]
+      summary: Create treatment record
+      security:
+        - bearerAuth: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateTreatmentRequest"
+      responses:
+        "201":
+          description: Treatment created
+
+
+  /sponsorship/campaigns:
+    post:
+      tags: [Sponsorship]
+      summary: Create sponsorship campaign
+      security:
+        - bearerAuth: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateCampaignRequest"
+      responses:
+        "201":
+          description: Campaign created
+
+    get:
+      tags: [Sponsorship]
+      summary: List open campaigns
+      responses:
+        "200":
+          description: Campaign list
+
+
+  /sponsorship/campaigns/{id}:
+    get:
+      tags: [Sponsorship]
+      summary: Get campaign details
+      parameters:
+        - in: path
+          name: id
+          required: true
+      responses:
+        "200":
+          description: Campaign details
+
+
+  /sponsorship/campaigns/{id}/donations:
+    post:
+      tags: [Sponsorship]
+      summary: Donate to campaign
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: id
+          required: true
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateDonationRequest"
+      responses:
+        "201":
+          description: Donation added
+
+
+############################################
+# COMPONENTS
+############################################
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+  schemas:
+    ########################################
+    # AUTH
+    ########################################
+
+    RegisterRequest:
+      type: object
+      required: [full_name, email, password]
+      properties:
+        full_name: { type: string }
+        email: { type: string }
+        password: { type: string }
+        role: { type: string }
+
+    LoginRequest:
+      type: object
+      required: [email, password]
+      properties:
+        email: { type: string }
+        password: { type: string }
+
+    LoginResponse:
+      type: object
+      properties:
+        token: { type: string }
+        user:
+          $ref: "#/components/schemas/AuthUserResponse"
+
+    AuthUserResponse:
+      type: object
+      properties:
+        id: { type: integer }
+        email: { type: string }
+        full_name: { type: string }
+        role: { type: string }
+
+
+    ########################################
+    # DOCTORS
+    ########################################
+
+    DoctorSummary:
+      type: object
+      properties:
+        id: { type: integer }
+        full_name: { type: string }
+        specialties:
+          type: array
+          items: { type: string }
+
+    AddAvailabilityRequest:
+      type: object
+      properties:
+        starts_at: { type: string }
+        ends_at: { type: string }
+        timezone: { type: string }
+
+    DoctorAvailabilitySlot:
+      type: object
+      properties:
+        id: { type: integer }
+        starts_at: { type: string }
+        ends_at: { type: string }
+        timezone: { type: string }
+        slot_status:
+          type: string
+          enum: [OPEN, BOOKED, BLOCKED]
+
+
+    ########################################
+    # APPOINTMENTS
+    ########################################
+
+    CreateAppointmentRequest:
+      type: object
+      required: [doctor_user_id, starts_at, ends_at, mode]
+      properties:
+        doctor_user_id: { type: integer }
+        starts_at: { type: string }
+        ends_at: { type: string }
+        mode:
+          type: string
+          enum: [video, audio, async]
+
+    Appointment:
+      type: object
+      properties:
+        id: { type: integer }
+        doctor_user_id: { type: integer }
+        patient_user_id: { type: integer }
+        starts_at: { type: string }
+        ends_at: { type: string }
+        mode: { type: string }
+        status:
+          type: string
+          enum: [PENDING, CONFIRMED, CANCELLED]
+
+
+    ########################################
+    # CONSULT
+    ########################################
+
+    StartAudioSessionRequest:
+      type: object
+      required: [appointment_id]
+      properties:
+        appointment_id: { type: integer }
+
+    StartAsyncSessionRequest:
+      type: object
+      required: [appointment_id]
+      properties:
+        appointment_id: { type: integer }
+        initial_message: { type: string }
+
+    UpdateBandwidthRequest:
+      type: object
+      required: [bandwidth_mode]
+      properties:
+        bandwidth_mode:
+          type: string
+          enum: [full, low, async]
+
+    PostMessageRequest:
+      type: object
+      properties:
+        message_type: { type: string }
+        body: { type: string }
+        file_id: { type: integer }
+
+    FileUploadMetaRequest:
+      type: object
+      properties:
+        storage_url: { type: string }
+
+    FileMeta:
+      type: object
+      properties:
+        id: { type: integer }
+        storage_url: { type: string }
+
+    TypingStatusRequest:
+      type: object
+      properties:
+        is_typing: { type: boolean }
+
+    ########################################
+    # TRANSLATION
+    ########################################
+
+    TranslatePreviewRequest:
+      type: object
+      required: [text, target_lang]
+      properties:
+        text: { type: string }
+        source_lang: { type: string }
+        target_lang: { type: string }
+        domain: { type: string }
+
+
+    ########################################
+    # SPONSORSHIP (FEATURE 2)
+    ########################################
+
+    CreateTreatmentRequest:
+      type: object
+      required: [patient_user_id, type, description]
+      properties:
+        patient_user_id: { type: integer }
+        type:
+          type: string
+          enum: [surgery, cancer, dialysis, rehab, other]
+        description: { type: string }
+        provider_org_id: { type: integer }
+
+    CreateCampaignRequest:
+      type: object
+      required: [treatment_id, title, goal_amount, currency]
+      properties:
+        treatment_id: { type: integer }
+        title: { type: string }
+        goal_amount: { type: number }
+        currency: { type: string }
+        story: { type: string }
+
+    CreateDonationRequest:
+      type: object
+      required: [amount, currency]
+      properties:
+        amount: { type: number }
+        currency: { type: string }
+        method: { type: string }
+
+    Campaign:
+      type: object
+      properties:
+        id: { type: integer }
+        title: { type: string }
+        goalAmount: { type: number }
+
