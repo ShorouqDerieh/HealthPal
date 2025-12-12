@@ -1,4 +1,4 @@
-const DoctorSessionsModel = require('../repositories/getDoctorSessionsModel.js');
+const DoctorSessionsModel = require('../repositories/getDoctorSessions.js');
 const UserModel = require('../repositories/users.js');
 const DoctorModel = require('../repositories/doctor.js');
 

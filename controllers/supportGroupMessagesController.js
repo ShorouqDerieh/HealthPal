@@ -1,5 +1,5 @@
-const MessagesModel = require('../repositories/supportGroupMessagesModel.js');
-const MembersModel = require('../repositories/supportGroupMembersModel.js');
+const MessagesModel = require('../repositories/supportGroupMessages.js');
+const MembersModel = require('../repositories/supportGroupMembers.js');
 const UserModel = require('../repositories/users.js');
 async function send(req, res) {
     try {

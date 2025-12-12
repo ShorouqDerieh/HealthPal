@@ -1,4 +1,4 @@
-const PatientSessionsModel = require('../repositories/getPatientSessionsModel.js');
+const PatientSessionsModel = require('../repositories/getPatientSessions.js');
 const UserModel = require('../repositories/users.js');
 
 module.exports = {

@@ -1,4 +1,4 @@
-const GroupsModel = require('../repositories/supportGroupsModel.js');
+const GroupsModel = require('../repositories/supportGroups.js');
 const UserModel = require('../repositories/users.js');
 
 async function create(req, res) {

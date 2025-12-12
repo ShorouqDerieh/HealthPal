@@ -1,4 +1,4 @@
-const NgoModel = require('../repositories/updateNgoModel.js');
+const NgoModel = require('../repositories/updateNgo.js');
 async function update(req, res) {
     try {
         const ngoId = req.params.id;

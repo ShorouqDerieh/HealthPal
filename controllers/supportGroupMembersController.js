@@ -1,4 +1,4 @@
-const MembersModel = require('../repositories/supportGroupMembersModel.js');
+const MembersModel = require('../repositories/supportGroupMembers.js');
 const UserModel = require('../repositories/users.js');
 
 async function add(req, res) {

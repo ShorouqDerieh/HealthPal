@@ -1,4 +1,4 @@
-const ChatModel = require('../repositories/getAnonChatMessagesModel.js');
+const ChatModel = require('../repositories/anonChatMessages.js');
 
 async function getMessages(req, res) {
     try {

@@ -1,4 +1,4 @@
-const NgoModel = require('../repositories/ngosModel.js');
+const NgoModel = require('../repositories/ngos.js');
 async function create(req, res) {
     try {
         const { name, description, country } = req.body;

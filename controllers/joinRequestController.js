@@ -1,7 +1,7 @@
-const JoinModel = require('../repositories/joinRequestsModel.js');
+const JoinModel = require('../repositories/joinRequests.js');
 const UserModel = require('../repositories/users.js');
 //const GroupsModel = require('../models/supportGroupsModel.js');
-const GroupsModel = require('../repositories/supportGroupMembersModel.js');
+const GroupsModel = require('../repositories/supportGroupMembers.js');
 
 async function requestJoin(req, res) {
     try {
