@@ -1,6 +1,5 @@
 // controllers/updateSupportGroupController.js
 const UpdateSupportGroupService = require('../services/updateSupportGroupService.js');
-
 async function update(req, res) {
     try {
         const groupId = req.params.id;

@@ -1,6 +1,5 @@
 // controllers/createNgoController.js
 const CreateNgoService = require('../services/createNgoService.js');
-
 async function create(req, res) {
     try {
         const { name, description, country } = req.body;

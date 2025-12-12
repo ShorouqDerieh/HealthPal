@@ -1,6 +1,5 @@
 // controllers/supportGroupMessageController.js
 const SupportGroupMessageService = require('../services/supportGroupMessageService.js');
-
 async function send(req, res) {
     try {
         const { group_id, sender_user_id, message_text } = req.body;

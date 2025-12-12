@@ -1,6 +1,5 @@
 // controllers/updateNgoController.js
 const UpdateNgoService = require('../services/updateNgoService.js');
-
 async function update(req, res) {
     try {
         const ngoId = req.params.id;
