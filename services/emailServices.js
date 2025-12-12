@@ -78,7 +78,52 @@ ${alert.body}
     );
   }
 }
+async function sendShortageAlertEmail(user, payload) {
+  if (!user.email) {
+    console.log(`[EMAIL] skipped: user ${user.user_id} has no email`);
+    return;
+  }
+
+  const subject = `Resource Shortage Alert: ${payload.item_name}`;
+
+  const html = `
+    <h2>⚠️ تنبيه نقص موارد</h2>
+    <h3>${payload.item_name}</h3>
+    <p>تم اكتشاف نقص في المخزون.</p>
+    <ul>
+      <li><strong>الكمية الحالية:</strong> ${payload.current_quantity}</li>
+      <li><strong>الحد الأدنى (Threshold):</strong> ${payload.threshold}</li>
+      <li><strong>Alert ID:</strong> ${payload.alert_id}</li>
+    </ul>
+    <p>يرجى إعادة التزويد أو تحديث المخزون.</p>
+    <br>
+    <p>مع التحية،<br>فريق HealthPal</p>
+  `;
+
+  const text = `
+تنبيه نقص موارد
+Item: ${payload.item_name}
+Current: ${payload.current_quantity}
+Threshold: ${payload.threshold}
+Alert ID: ${payload.alert_id}
+`;
+
+  try {
+    const info = await transporter.sendMail({
+      from,
+      to: user.email,
+      subject,
+      text,
+      html,
+    });
+
+    console.log(`[EMAIL] Shortage alert sent to ${user.email} | messageId=${info.messageId}`);
+  } catch (err) {
+    console.error(`[EMAIL] Error sending shortage email to ${user.email}:`, err.message);
+  }
+}
 
 module.exports = {
   sendHealthAlertEmail,
+  sendShortageAlertEmail
 };

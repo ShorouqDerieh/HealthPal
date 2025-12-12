@@ -177,3 +177,22 @@ CREATE TABLE webinar_registrations (
   UNIQUE KEY uq_webinar_user (webinar_id, user_id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
+ALTER TABLE inventory_items
+  ADD COLUMN min_threshold INT NULL AFTER quantity;
+CREATE TABLE resource_shortage_alerts (
+  id BIGINT PRIMARY KEY AUTO_INCREMENT,
+  inventory_item_id BIGINT NOT NULL,
+  org_id BIGINT NULL,
+  current_quantity INT NOT NULL,
+  threshold INT NOT NULL,
+  status ENUM('OPEN','RESOLVED') DEFAULT 'OPEN',
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  resolved_at TIMESTAMP NULL,
+  resolved_by BIGINT NULL,
+  FOREIGN KEY (inventory_item_id) REFERENCES inventory_items(id),
+  FOREIGN KEY (org_id) REFERENCES organizations(id),
+  FOREIGN KEY (resolved_by) REFERENCES users(id),
+  INDEX (inventory_item_id),
+  INDEX (org_id),
+  INDEX (status)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;

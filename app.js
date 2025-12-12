@@ -20,6 +20,8 @@ const getNgosRoutes = require('./routes/getNgosRoutes.js');
 const updateNgoRoutes = require('./routes/updateNgoRoutes.js');
 const AlertRoute=require('./routes/AlertRoutes.js')
 const notificationPrefsRoutes = require('./routes/notificationPreferencesRoutes.js');
+const shortageRoutes=require('./routes/shortageAlertsRoutes.js')
+app.use('/shortages',shortageRoutes)
 app.use('/notification-preferences',notificationPrefsRoutes)
 app.use('/api/ngos/update', updateNgoRoutes);
 app.use('/api/ngos/all', getNgosRoutes);

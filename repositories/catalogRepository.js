@@ -54,6 +54,7 @@ static async viewOneItem(id){
     listings.id                     AS listing_id,
     listings.lister_type,
     listings.status,
+    listings.inventory_item_id,
     inventory_items.name,
     inventory_items.kind,
     inventory_items.form_factor,
@@ -71,7 +72,7 @@ static async viewOneItem(id){
   FROM listings
   JOIN inventory_items
     ON listings.inventory_item_id = inventory_items.id
-  JOIN organizations
+  LEFT JOIN organizations
     ON inventory_items.org_id = organizations.id
   WHERE listings.status = 'AVAILABLE'
     AND listings.id = ?
@@ -113,6 +114,15 @@ static async getInventoryItemById(id) {
   const [rows] = await db.query(sql, [id]);
   return rows[0] || null;
 }
-
+static async getListingBasic(listingId) {
+  const [rows] = await db.query(
+    `SELECT id, inventory_item_id, status
+     FROM listings
+     WHERE id = ?
+     LIMIT 1`,
+    [listingId]
+  );
+  return rows[0] || null;
+}
 }
 module.exports=Catalog
