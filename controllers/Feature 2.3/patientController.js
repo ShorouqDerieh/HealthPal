@@ -1,4 +1,4 @@
-const TransparencyRepository = require("../../repositories/TransparencyRepository");
+const TransparencyRepository = require("../../repositories/Feature 2.3/TransparencyRepository");
 const PatientService = require("../../services/Feature 2.3/patientService");
 
 const repo = new TransparencyRepository();

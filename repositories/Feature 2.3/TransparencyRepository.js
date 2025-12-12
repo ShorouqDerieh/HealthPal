@@ -1,5 +1,5 @@
 
-const pool = require("../database");
+const pool = require("../../database");
 
 class TransparencyRepository {
   async findDonationById(donationId) {

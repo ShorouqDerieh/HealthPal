@@ -1,4 +1,4 @@
-const pool=require('../database');
+const pool=require('../../database');
 class PatientProfileRepository {
     async findProfileByUserId(userId) {
         const [rows]= await pool.execute(`

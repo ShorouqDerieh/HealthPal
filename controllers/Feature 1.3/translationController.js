@@ -1,5 +1,5 @@
 
-const translationService = require("../../services/translation");
+const translationService = require("../../services/Feature 1.3");
 
 
 async function previewTranslation(req, res) {

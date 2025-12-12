@@ -1,4 +1,4 @@
-const pool =require ("../database");
+const pool =require ("../../database");
 class   SponsorshipRepository{
 
     async createTreatment ({patientUserId,type,description,providerOrgId}){

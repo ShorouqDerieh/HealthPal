@@ -20,7 +20,6 @@ async function ensureAppointmentParticipant(conn, appointmentId, userId) {
   return { appt };
 }
 
-
 async function ensureSessionParticipant(conn, sessionId, userId) {
   const [rows] = await conn.query(
     `SELECT

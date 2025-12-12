@@ -1,5 +1,5 @@
-const PatientProfileRepository = require('../../repositories/patientProfileRepository');
-const PatientProfileService = require('../../services/patientProfileService');
+const PatientProfileRepository = require('../../repositories/Feature 2.2/patientProfileRepository');
+const PatientProfileService = require('../../services/Feature 2.2/PatientProfileService');
 const repository = new PatientProfileRepository();
 const service = new PatientProfileService(repository);
 async function getMyProfile(req, res, next) {

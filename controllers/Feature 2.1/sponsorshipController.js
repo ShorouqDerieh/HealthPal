@@ -1,5 +1,5 @@
-const SponsorshipRepository =require ("../../repositories/SponsorshipRepository");
-const SponsorshipService=require("../../services/SponsorshipService");
+const SponsorshipRepository =require ("../../repositories/Feature 2.1/SponsorshipRepository");
+const SponsorshipService=require("../../services/Feature 2.1/SponsorshipService");
 const repository =new SponsorshipRepository();
 const service=new SponsorshipService(repository);
 async function createTreatment(req,res,next){
