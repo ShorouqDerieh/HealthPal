@@ -59,4 +59,39 @@ return res.status(201).json(result);
 next(err);
     }
 }
-module.exports ={donate,getCampaign,listCampaigns,createTreatment,createCampaign};
+async function createPayPalOrder(req, res, next) {
+  try {
+    const campaignId = Number(req.params.id);
+    const { amount, currency } = req.body;
+
+    const order = await service.createPayPalDonation({
+      campaignId,
+      amount,
+      currency,
+    });
+
+    res.json(order);
+  } catch (err) {
+    next(err);
+  }
+}
+async function capturePayPalOrder(req, res, next) {
+  try {
+    const campaignId = Number(req.params.id);
+    const { orderId } = req.body;
+    const donorUserId = req.user.id;
+
+    const donation = await service.confirmPayPalDonation({
+      orderId,
+      campaignId,
+      donorUserId,
+    });
+
+    res.status(201).json(donation);
+  } catch (err) {
+    next(err);
+  }
+}
+
+
+module.exports ={donate,getCampaign,listCampaigns,createTreatment,createCampaign,createPayPalOrder,capturePayPalOrder};

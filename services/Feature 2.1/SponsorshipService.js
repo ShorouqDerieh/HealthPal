@@ -1,3 +1,5 @@
+const PayPalClient = require("./paypalClient");
+
 class SponsorshipService {
 
     /**
@@ -5,6 +7,7 @@ class SponsorshipService {
      */
     constructor (repository){
 this.repository=repository;
+this.paypal=new PayPalClient();
     }
     async createTreatmentForPatient({patientUserId,type ,description,providerOrgId}){
         const allowedTypes =["surgery","dialysis","cancer","rehab","other"];
@@ -90,6 +93,38 @@ this.repository=repository;
       campaign: updated,
     };
   }
+  async createPayPalDonation({ campaignId, amount, currency }) {
+  const campaign = await this.repository.findCampaignById(campaignId);
+  if (!campaign) throw new Error("Campaign not found");
+
+  return this.paypal.createOrder(amount, currency);
+}
+async confirmPayPalDonation({ orderId, campaignId, donorUserId }) {
+  const capture = await this.paypal.captureOrder(orderId);
+
+  if (capture.status !== "COMPLETED") {
+    const err = new Error("Payment not completed");
+    err.statusCode = 400;
+    throw err;
+  }
+
+  const amount = capture.purchase_units[0].payments.captures[0].amount.value;
+  const currency = capture.purchase_units[0].payments.captures[0].amount.currency_code;
+  const paymentRef = capture.id;
+
+  const donation = await this.repository.createDonation({
+    campaignId,
+    donorUserId,
+    amount,
+    currency,
+    method: "paypal",
+    paymentRef,
+    paidAt: new Date(),
+  });
+
+  return donation;
+}
+
 }
 
 module.exports = SponsorshipService;

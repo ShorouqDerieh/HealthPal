@@ -10,4 +10,16 @@ router.post("/campaigns",authRequired,requireRole("doctor"),validate({schema:cre
 router.get("/campaigns",validate({schema:listCampaignsQuerySchema,source:"query"}),sponsorshipCtrl.listCampaigns);
 router.get("/campaigns/:id",sponsorshipCtrl.getCampaign);
 router.post("/campaigns/:id/donate",authRequired,validate({schema:donateSchema,source:"body"}),sponsorshipCtrl.donate);
+router.post(
+  "/campaigns/:id/paypal/create",
+  authRequired,
+  sponsorshipCtrl.createPayPalOrder
+);
+
+router.post(
+  "/campaigns/:id/paypal/capture",
+  authRequired,
+  sponsorshipCtrl.capturePayPalOrder
+);
+
 module.exports=router;
