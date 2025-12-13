@@ -53,7 +53,7 @@ overcome the collapse or inaccessibility of local healthcare systems
 - **Nodemailer** – Used to send email notifications.
 - **Axios** – Used for making HTTP requests to external services.
 - **OpenAI API** – Supports AI-based features such as translation.
-- - **PayPal API** – Handles secure payment processing and transactions in USD..
+- **PayPal API** – Handles secure payment processing and transactions in USD.
 - **YAML** – Used for defining OpenAPI specifications.
 - **Postman** – Used to test, validate, and demonstrate API endpoints.
 - **GitHub** – A web-based platform for version control and collaboration using Git.
@@ -150,7 +150,7 @@ Manages verified NGOs, medical missions, and surgical campaigns. Organizations c
 - **OpenAI API** – Used for AI-powered medical text translation.
 - **Daily API** – Used to automatically generate webinar meeting rooms when needed.
 - **SMTP (Email Service)** – Used to send health alerts and shortage notifications.
-
+- **PayPal API** – Handles secure payment processing and transactions.
 <a id="roles"></a>
 ## 👥 Roles
 
@@ -169,7 +169,7 @@ Access the complete API documentation for HealthPal here:
 <a id="demo"></a>
 ## 🎬 Demo
 
-- 🚀 [View Demo]() – Backend API demo via Postman
+- 🚀 [View Demo](https://drive.google.com/drive/folders/1dZ2h-5t3zk3Tjp6sT1Q9qH5brALmINRq?usp=drive_link) – Backend API demo via Postman
 
 <a id="contact"></a>
 ## 📬 Contact
